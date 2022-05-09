@@ -1,4 +1,9 @@
-import { NgModule, Injectable, ModuleWithProviders, Inject } from '@angular/core';
+import {
+  Inject,
+  Injectable,
+  ModuleWithProviders,
+  NgModule,
+} from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 
 function _window(): any {
@@ -13,10 +18,9 @@ export class WindowRef {
 }
 
 @NgModule({
-  providers: [WindowRef]
+  providers: [WindowRef],
 })
 export class BackButtonDisableModule {
-
   private window: Window;
   private scrollX = 0;
   private scrollY = 0;
@@ -26,28 +30,34 @@ export class BackButtonDisableModule {
     private windowRef: WindowRef,
     @Inject('preserveScrollPosition') private preserveScrollPosition: boolean
   ) {
-    this.window = this.windowRef.nativeWindow
+    this.window = this.windowRef.nativeWindow;
     this.disableBackButton();
     this.addPopStateEventListener();
   }
 
-  static forRoot(config?: { preserveScrollPosition: boolean }): ModuleWithProviders {
+  static forRoot(config?: {
+    preserveScrollPosition: boolean;
+  }): ModuleWithProviders<BackButtonDisableModule> {
     return {
       ngModule: BackButtonDisableModule,
       providers: [
         {
           provide: 'preserveScrollPosition',
-          useValue: config && 'preserveScrollPosition' in config ? config.preserveScrollPosition : false
-        }
-      ]
-    }
+          useValue:
+            config && 'preserveScrollPosition' in config
+              ? config.preserveScrollPosition
+              : false,
+        },
+      ],
+    };
   }
 
   private addPopStateEventListener(): void {
     this.window.addEventListener('popstate', () => {
       if (this.preserveScrollPosition) this.getScrollCoordinates();
-      this.window.history.pushState(null, null, null);
-      if (this.preserveScrollPosition) setTimeout(this.scrollToThePreviousPosition.bind(this));
+      this.window.history.pushState(null, '', null);
+      if (this.preserveScrollPosition)
+        setTimeout(this.scrollToThePreviousPosition.bind(this));
     });
   }
 
@@ -61,11 +71,11 @@ export class BackButtonDisableModule {
   }
 
   private disableBackButton(): void {
-    this.window.history.pushState(null, null, null);
-    this.router.events.subscribe(event => {
+    this.window.history.pushState(null, '', null);
+    this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        this.window.history.pushState(null, null, null);
-      };
+        this.window.history.pushState(null, '', null);
+      }
     });
   }
 }
