@@ -17,7 +17,7 @@ Import the **BackButtonDisableModule** to your project app.module.ts file and ad
 
 ```typescript
 import { NgModule } from '@angular/core';
-import { BackButtonDisableModule } from 'angular-disable-browser-back-button';
+import { BackButtonDisableModule } from 'ngx-disable-browser-back-button';
 
 @NgModule({
   ...
